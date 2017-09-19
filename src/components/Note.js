@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DragSource} from 'react-dnd';
+import $ from 'jquery';
 
 const style = {
   position: 'absolute',
@@ -35,6 +36,24 @@ class Note extends Component {
     children: PropTypes.node,
   };
 
+  constructor(props){
+    super(props);
+    this.state = {
+      title: this.props.title
+    };
+
+    this.setModalValues = this.setModalValues.bind(this);
+  }
+
+  setModalValues(event) {
+    console.log('executed');
+    this.setState({title: event.target.value});
+    console.log(this.state.title);
+    console.log(this.state.title);
+    $('#modal-title').html(this.state.title);
+
+  }
+
   render() {
     const {left, top, connectDragSource, isDragging, children} = this.props;
     if (isDragging) {
@@ -42,9 +61,9 @@ class Note extends Component {
     }
 
     return connectDragSource(
-      <div style={{...style, left, top}}>
+      <div onClick={this.setModalValues} value={this.props.title} href="#demo" data-toggle="adaptive-modal" style={{...style, left, top}}>
         {children}
-      </div>,
+      </div>
     );
   }
 }

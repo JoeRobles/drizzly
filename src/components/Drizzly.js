@@ -40,16 +40,14 @@ class Drizzly extends Component {
   constructor(props) {
     super(props);
     this.notes = {
-      a: {top: 20, left: 80, title: 'Drag me around', content: 'This is a message from note A'},
-      b: {top: 180, left: 20, title: 'Drag me too', content: 'This is a message from note B'},
+      a: {top: 20, left: 80, title: 'Drag me around'},
+      b: {top: 180, left: 20, title: 'Drag me too'},
     };
     this.state = {
       notes: this.notes,
-      newNoteContent: '',
       newNoteTitle: ''
     };
 
-    this.newNoteContent = this.newNoteContent.bind(this);
     this.newNoteTitle = this.newNoteTitle.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
   }
@@ -64,25 +62,19 @@ class Drizzly extends Component {
     }));
   }
 
-  newNoteContent(event) {
-    this.setState({newNoteContent: event.target.value});
-  }
-
-
   newNoteTitle(event) {
     this.setState({newNoteTitle: event.target.value});
   }
 
   addNewNote() {
     let id = uuid();
-    let note = {top: 10, left: 10, title: this.state.newNoteTitle, content: this.state.newNoteContent};
+    let note = {top: 10, left: 10, title: this.state.newNoteTitle};
 
     this.setState({
       notes: {
         [id]: note,
         ...this.state.notes
       },
-      newNoteContent: '',
       newNoteTitle: ''
     });
   }
@@ -99,18 +91,13 @@ class Drizzly extends Component {
             placeholder="Enter note's title"
             type="text"
             value={this.state.newNoteTitle}/>
-          <textarea
-            onChange={this.newNoteContent}
-            placeholder="Enter note's content"
-            type="text"
-            value={this.state.newNoteContent}></textarea>
           <button onClick={this.addNewNote}>Add New Note</button>
         </div>
         <div style={styles}>
           {Object.keys(notes).map((key) => {
-            const {left, top, title, content} = notes[key];
+            const {left, top, title} = notes[key];
             return (
-              <Note key={key} id={key} left={left} top={top} content={content} title={title}>{title}</Note>
+              <Note key={key} id={key} left={left} top={top} title={title}>{title}</Note>
             );
           })}
         </div>
