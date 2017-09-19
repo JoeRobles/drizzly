@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import update from 'react/lib/update';
+
 import {DropTarget, DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import Note from './Note';
+
 import uuid from 'uuid';
+import Note from './Note';
 
 const styles = {
   width: '99%',
   height: '700px',
   border: '1px solid black',
-  position: 'relative',
+  position: 'relative'
 };
 
 const noteTarget = {
@@ -21,10 +23,11 @@ const noteTarget = {
     const top = Math.round(item.top + delta.y);
 
     component.moveNote(item.id, left, top);
-  },
+  }
 };
 
 @DragDropContext(HTML5Backend)
+
 @DropTarget('note', noteTarget, connect => ({
   connectDropTarget: connect.dropTarget(),
 }))
@@ -37,15 +40,17 @@ class Drizzly extends Component {
   constructor(props) {
     super(props);
     this.notes = {
-      a: {top: 20, left: 80, title: 'Drag me around'},
-      b: {top: 180, left: 20, title: 'Drag me too'},
+      a: {top: 20, left: 80, title: 'Drag me around', content: 'This is a message from note A'},
+      b: {top: 180, left: 20, title: 'Drag me too', content: 'This is a message from note B'},
     };
     this.state = {
-      notes : this.notes,
-      newNote: ''
+      notes: this.notes,
+      newNoteContent: '',
+      newNoteTitle: ''
     };
 
     this.newNoteContent = this.newNoteContent.bind(this);
+    this.newNoteTitle = this.newNoteTitle.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
   }
 
@@ -60,19 +65,25 @@ class Drizzly extends Component {
   }
 
   newNoteContent(event) {
-    this.setState({newNote: event.target.value});
+    this.setState({newNoteContent: event.target.value});
+  }
+
+
+  newNoteTitle(event) {
+    this.setState({newNoteTitle: event.target.value});
   }
 
   addNewNote() {
     let id = uuid();
-    let note = {top: 10, left: 10, title: this.state.newNote};
-    console.log(note);
+    let note = {top: 10, left: 10, title: this.state.newNoteTitle, content: this.state.newNoteContent};
 
     this.setState({
       notes: {
-        [id]:note,
-      ...this.state.notes},
-      newNote: ''
+        [id]: note,
+        ...this.state.notes
+      },
+      newNoteContent: '',
+      newNoteTitle: ''
     });
   }
 
@@ -84,23 +95,22 @@ class Drizzly extends Component {
       <div>
         <div>
           <input
-            onChange={this.newNoteContent}
-            placeholder="Enter a new note's content"
+            onChange={this.newNoteTitle}
+            placeholder="Enter note's title"
             type="text"
-            value={this.state.newNote}/>
-          <button onClick={this.addNewNote}>New Note</button>
+            value={this.state.newNoteTitle}/>
+          <textarea
+            onChange={this.newNoteContent}
+            placeholder="Enter note's content"
+            type="text"
+            value={this.state.newNoteContent}></textarea>
+          <button onClick={this.addNewNote}>Add New Note</button>
         </div>
         <div style={styles}>
           {Object.keys(notes).map((key) => {
-            const {left, top, title} = notes[key];
+            const {left, top, title, content} = notes[key];
             return (
-              <Note
-                key={key}
-                id={key}
-                left={left}
-                top={top}>
-                {title}
-              </Note>
+              <Note key={key} id={key} left={left} top={top} content={content} title={title}>{title}</Note>
             );
           })}
         </div>

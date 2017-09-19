@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { DragSource } from 'react-dnd';
+import {DragSource} from 'react-dnd';
 
 const style = {
   position: 'absolute',
@@ -14,8 +14,9 @@ const style = {
 
 const noteSource = {
   beginDrag(props) {
-    const { id, left, top } = props;
-    return { id, left, top };
+    const {id, left, top} = props;
+
+    return {id, left, top};
   },
 };
 
@@ -35,13 +36,13 @@ class Note extends Component {
   };
 
   render() {
-    const { left, top, connectDragSource, isDragging, children } = this.props;
+    const {left, top, connectDragSource, isDragging, children} = this.props;
     if (isDragging) {
       return null;
     }
 
     return connectDragSource(
-      <div style={{ ...style, left, top }}>
+      <div style={{...style, left, top}}>
         {children}
       </div>,
     );
