@@ -4,6 +4,35 @@ body {
   font-family: sans-serif;
 }
 
+.ReactFlipCard {
+  margin: 0;
+  text-align: center;
+}
+.ReactFlipCard div{
+  height: 100px;
+  width: 100px;
+}
+.ReactFlipCard,
+.ReactFlipCard__Front,
+.ReactFlipCard__Back {
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+}
+.ReactFlipCard__Front,
+.ReactFlipCard__Back {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 0;
+}
+.ReactFlipCard__Front {
+  background-color: #ff0;
+}
+.ReactFlipCard__Back {
+  background-color: #00f;
+  color: #000;
+}
+
 .am-overlay {
   height: 100%;
   width: 100%;

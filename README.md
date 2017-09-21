@@ -1,5 +1,16 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
+Since E7 decorators are not supported by default, two files must be edited in order run this project.
+
+This line:
+
+  `plugins: ['transform-decorators-legacy']`
+
+Must to be added to these files:
+
+ `node_modules/react-scripts/config/webpack.config.dev.js 181`<br> 
+  `node_modules/react-scripts/config/webpack.config.prod.js 183`
+
 Below you will find some information on how to perform common tasks.<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 

@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DragSource} from 'react-dnd';
-import $ from 'jquery';
+import FlipCard from 'react-flipcard';
 
 const style = {
   position: 'absolute',
-  border: '1px solid gray',
-  backgroundColor: '#ff0',
-  padding: '0.5rem 1rem',
   cursor: 'move',
   height: '100px',
   width: '100px',
@@ -15,9 +12,9 @@ const style = {
 
 const noteSource = {
   beginDrag(props) {
-    const {id, left, top} = props;
+    const {id, left, top, title, content} = props;
 
-    return {id, left, top};
+    return {id, left, top, title, content};
   },
 };
 
@@ -39,19 +36,46 @@ class Note extends Component {
   constructor(props){
     super(props);
     this.state = {
-      title: this.props.title
+      title: this.props.title,
+      content: this.props.content,
+      isFlipped: false
     };
 
-    this.setModalValues = this.setModalValues.bind(this);
+    this.getInitialState = this.getInitialState.bind(this);
+    this.showBack = this.showBack.bind(this);
+    this.showFront = this.showFront.bind(this);
+    this.handleOnFlip = this.handleOnFlip.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  setModalValues(event) {
-    console.log('executed');
-    this.setState({title: event.target.value});
-    console.log(this.state.title);
-    console.log(this.state.title);
-    $('#modal-title').html(this.state.title);
+  getInitialState() {
+    return {
+      isFlipped: false
+    };
+  }
 
+  showBack() {
+    this.setState({
+      isFlipped: true
+    });
+  }
+
+  showFront() {
+    this.setState({
+      isFlipped: false
+    });
+  }
+
+  handleOnFlip(flipped) {
+    if (flipped) {
+      document.getElementById('root').focus();
+    }
+  }
+
+  handleKeyDown(e) {
+    if (this.state.isFlipped && e.keyCode === 27) {
+      this.showFront();
+    }
   }
 
   render() {
@@ -61,8 +85,19 @@ class Note extends Component {
     }
 
     return connectDragSource(
-      <div onClick={this.setModalValues} value={this.props.title} href="#demo" data-toggle="adaptive-modal" style={{...style, left, top}}>
-        {children}
+      <div className="note" style={{...style, left, top}}>
+        <FlipCard
+          disabled={true}
+          flipped={this.state.isFlipped}
+          onFlip={this.handleOnFlip}
+          onKeyDown={this.handleKeyDown}>
+          <div onClick={this.showBack}>
+            {this.props.title}
+          </div>
+          <div ref="backButton" onClick={this.showFront}>
+            {this.props.content}
+          </div>
+        </FlipCard>
       </div>
     );
   }
