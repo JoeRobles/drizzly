@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DragSource} from 'react-dnd';
 import FlipCard from 'react-flipcard';
+import Modal from './Modal';
 
 const style = {
   position: 'absolute',
@@ -33,25 +34,21 @@ class Note extends Component {
     children: PropTypes.node,
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       title: this.props.title,
       content: this.props.content,
-      isFlipped: false
+      isFlipped: false,
+      isModalOpen: false
     };
 
-    this.getInitialState = this.getInitialState.bind(this);
     this.showBack = this.showBack.bind(this);
     this.showFront = this.showFront.bind(this);
     this.handleOnFlip = this.handleOnFlip.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-
-  getInitialState() {
-    return {
-      isFlipped: false
-    };
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   showBack() {
@@ -69,6 +66,7 @@ class Note extends Component {
   handleOnFlip(flipped) {
     if (flipped) {
       document.getElementById('root').focus();
+      this.openModal();
     }
   }
 
@@ -78,8 +76,17 @@ class Note extends Component {
     }
   }
 
+  openModal() {
+    this.setState({isModalOpen: true});
+  }
+
+  closeModal() {
+    this.setState({isModalOpen: false});
+    this.showFront();
+  }
+
   render() {
-    const {left, top, connectDragSource, isDragging, children} = this.props;
+    const {left, top, connectDragSource, isDragging} = this.props;
     if (isDragging) {
       return null;
     }
@@ -98,6 +105,14 @@ class Note extends Component {
             {this.props.content}
           </div>
         </FlipCard>
+        <div className="modal">
+          <Modal isOpen={this.state.isModalOpen}
+                 transitionName="modal-anim">
+            <div ref="backButton" onClick={this.closeModal} className="body">
+              {this.props.content}
+            </div>
+          </Modal>
+        </div>
       </div>
     );
   }
