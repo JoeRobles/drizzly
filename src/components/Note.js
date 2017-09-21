@@ -54,6 +54,8 @@ class Note extends Component {
   showBack() {
     this.setState({
       isFlipped: true
+    }, () => {
+      setTimeout(this.openModal, 700);
     });
   }
 
@@ -64,10 +66,7 @@ class Note extends Component {
   }
 
   handleOnFlip(flipped) {
-    if (flipped) {
-      document.getElementById('root').focus();
-      this.openModal();
-    }
+    document.getElementById('root').focus();
   }
 
   handleKeyDown(e) {
@@ -81,8 +80,11 @@ class Note extends Component {
   }
 
   closeModal() {
-    this.setState({isModalOpen: false});
-    this.showFront();
+    this.setState({
+      isModalOpen: false
+    }, () => {
+      setTimeout(this.showFront, 700);
+    });
   }
 
   render() {
@@ -98,21 +100,21 @@ class Note extends Component {
           flipped={this.state.isFlipped}
           onFlip={this.handleOnFlip}
           onKeyDown={this.handleKeyDown}>
-          <div onClick={this.showBack}>
-            {this.props.title}
-          </div>
-          <div ref="backButton" onClick={this.showFront}>
-            {this.props.content}
-          </div>
+          <div onClick={this.showBack}>  {this.props.title} </div>
+          <div> {this.props.content} </div>
+
         </FlipCard>
-        <div className="modal">
+        {this.state.isModalOpen && (<div className="modal">
           <Modal isOpen={this.state.isModalOpen}
                  transitionName="modal-anim">
             <div ref="backButton" onClick={this.closeModal} className="body">
               {this.props.content}
             </div>
           </Modal>
-        </div>
+        </div>)}
+
+
+
       </div>
     );
   }
